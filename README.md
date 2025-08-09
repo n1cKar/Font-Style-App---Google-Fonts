@@ -13,7 +13,8 @@ A clean, responsive font preview web application built with **Next.js**, **TypeS
 
 ## Demo
 
-*Add your demo link here if available*
+*Add your demo link here*
+demo link: https://font-style-app.vercel.app
 
 ## Installation
 

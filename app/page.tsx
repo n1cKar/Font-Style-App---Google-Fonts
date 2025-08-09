@@ -1,102 +1,164 @@
-import Image from "next/image";
+"use client";
+import { useState, useMemo } from "react";
+import Link from "next/link";
+import { useGoogleFonts, GoogleFont } from "./hooks/useGoogleFonts";
+import FontCard from "./components/FontCard";
+import TextInput from "./components/TextInput";
+
+const PAGE_SIZE = 9;
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { fonts, loading, error } = useGoogleFonts();
+  const [text, setText] = useState("Hello World!");
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // Search & filter state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [page, setPage] = useState(1);
+
+  // Get unique categories from fonts
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    fonts.forEach((f) => cats.add(f.category));
+    return Array.from(cats).sort();
+  }, [fonts]);
+
+  // Filter fonts by search term and category
+  const filteredFonts = useMemo(() => {
+    return fonts.filter((font) => {
+      const matchesSearch = font.family.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = categoryFilter === "all" || font.category === categoryFilter;
+      return matchesSearch && matchesCategory;
+    });
+  }, [fonts, searchTerm, categoryFilter]);
+
+  // Pagination logic
+  const pageCount = Math.ceil(filteredFonts.length / PAGE_SIZE);
+  const pagedFonts = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredFonts.slice(start, start + PAGE_SIZE);
+  }, [filteredFonts, page]);
+
+  // Handlers
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCategoryFilter(e.target.value);
+    setPage(1); // Reset page when filter changes
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setPage(1); // Reset page when search changes
+  };
+
+  const handlePrevPage = () => setPage((p) => Math.max(p - 1, 1));
+  const handleNextPage = () => setPage((p) => Math.min(p + 1, pageCount));
+
+  const scrollToFonts = () => {
+    const el = document.getElementById("fonts");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+  return (
+    <div className={`${isDarkMode ? "dark bg-gray-900 text-white" : "bg-gray-50 text-gray-900"} min-h-screen transition-colors`}>
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <h1 className="text-2xl font-semibold text-green-600 dark:text-green-400 cursor-default select-none">
+            Font Style App
+          </h1>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+              aria-label="Toggle Dark Mode"
+            >
+              <i className={`${isDarkMode ? "ri-sun-line" : "ri-moon-line"}`} />
+            </button>
+            <button
+              onClick={scrollToFonts}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+            >
+              Go To Fonts
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+      {/* Main */}
+      <main className="max-w-7xl mx-auto px-4 py-10 space-y-6" id="fonts">
+        {/* Global preview text input */}
+        <TextInput value={text} onChange={setText} />
+
+        {/* Search & Filter */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 gap-4 mb-6">
+          <input
+            type="search"
+            placeholder="Search fonts..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="flex-1 p-2 border rounded-lg dark:bg-gray-700 dark:text-white"
+          />
+          <select
+            value={categoryFilter}
+            onChange={handleCategoryChange}
+            className="p-2 border rounded-lg dark:bg-gray-700 dark:text-white"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+            <option value="all">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Font Cards Grid */}
+        {loading && <p>Loading fonts...</p>}
+        {error && <p className="text-red-600">Error: {error}</p>}
+
+        {pagedFonts.length === 0 && !loading && <p>No fonts found.</p>}
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {pagedFonts.map((font) => (
+            <FontCard
+              key={font.family}
+              fontFamily={font.family}
+              fontLabel={font.family}
+              variants={font.variants}
+              text={text}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          ))}
+        </div>
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center items-center space-x-4 mt-8">
+          <button
+            onClick={handlePrevPage}
+            disabled={page === 1}
+            className="px-4 py-2 bg-green-600 disabled:bg-green-300 text-white rounded-lg"
           >
-            Read our docs
-          </a>
+            Prev
+          </button>
+          <span>
+            Page {page} of {pageCount}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={page === pageCount || pageCount === 0}
+            className="px-4 py-2 bg-green-600 disabled:bg-green-300 text-white rounded-lg"
+          >
+            Next
+          </button>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className={`${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900 border-t"} py-8`}>
+        <div className="text-center">&copy; 2025 Font Style App. Made by Nimash Mendis.</div>
       </footer>
     </div>
   );

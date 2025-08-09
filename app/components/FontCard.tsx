@@ -4,6 +4,8 @@ import FontPreview from "./FontPreview";
 import FontControls from "./FontControls";
 import { applyTextStyle, TextStyleKey } from "../utils/textStyles";
 
+export const runtime = "edge"; // Use Edge runtime for better performance
+
 interface FontCardProps {
   fontFamily: string;
   fontLabel: string;

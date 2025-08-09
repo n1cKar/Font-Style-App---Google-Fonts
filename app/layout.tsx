@@ -4,6 +4,8 @@ import "./globals.css";
 
 import { Pacifico, Roboto, Lato } from "next/font/google";
 
+export const runtime = "edge"; // Use Edge runtime for better performance
+
 
 const pacifico = Pacifico({ subsets: ["latin"], weight: "400", variable: "--font-pacifico" });
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-roboto" });

@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 
+export const runtime = "edge"; // Use Edge runtime for better performance
+
 interface TextInputProps {
   value: string;
   onChange: (value: string) => void;

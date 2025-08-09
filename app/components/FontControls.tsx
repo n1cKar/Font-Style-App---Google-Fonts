@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 
+export const runtime = "edge"; // Use Edge runtime for better performance
+
 interface FontControlsProps {
   size: number;
   color: string;

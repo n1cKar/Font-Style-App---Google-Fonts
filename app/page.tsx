@@ -5,6 +5,8 @@ import { useGoogleFonts, GoogleFont } from "./hooks/useGoogleFonts";
 import FontCard from "./components/FontCard";
 import TextInput from "./components/TextInput";
 
+export const runtime = "edge"; // Use Edge runtime for better performance
+
 const PAGE_SIZE = 9;
 
 export default function Home() {

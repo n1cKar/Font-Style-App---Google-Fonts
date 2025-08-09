@@ -14,7 +14,7 @@ export function useGoogleFonts() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const apiKey = "AIzaSyDRhqsrA_zKLeHBpXKfRl-BCCrqo_nrggw"; // Replace with your actual API key
+    const apiKey = "Replace with your actual API key"; // Replace with your actual API key
     if (!apiKey) {
       setError("Missing Google Fonts API key in environment");
       setLoading(false);

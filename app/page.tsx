@@ -66,29 +66,54 @@ export default function Home() {
     <div className={`${isDarkMode ? "dark bg-gray-900 text-white" : "bg-gray-50 text-gray-900"} min-h-screen transition-colors`}>
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <h1 className="text-2xl font-semibold text-green-600 dark:text-green-400 cursor-default select-none">
-            Font Style App
-          </h1>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-              aria-label="Toggle Dark Mode"
-            >
-              <i className={`${isDarkMode ? "ri-sun-line" : "ri-moon-line"}`} />
-            </button>
-            <button
-              onClick={scrollToFonts}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
-            >
-              Go To Fonts
-            </button>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <h1 className="text-2xl font-semibold text-green-600 dark:text-green-400 cursor-default select-none">
+              Font Style App
+            </h1>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                aria-label="Toggle Dark Mode"
+              >
+                <i className={`${isDarkMode ? "ri-sun-line" : "ri-moon-line"}`} />
+              </button>
+              <button
+                onClick={scrollToFonts}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+              >
+                Go To Fonts
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-green-600 to-green-400 dark:from-green-800 dark:to-green-600 text-white py-30 px-8 sm:px-20 rounded-lg shadow-lg max-w-7xl mx-auto mb-16">
+        <div className="max-w-5xl mx-auto text-center">
+          <h1 className="text-6xl sm:text-7xl font-extrabold mb-6 drop-shadow-md leading-tight">
+            Discover Your Perfect Font Style
+          </h1>
+          <p className="text-2xl sm:text-3xl mb-12 max-w-4xl mx-auto drop-shadow-sm">
+            Instantly preview and customize Google Fonts with live text editing,
+            color, size, and weight controls — all in a sleek, responsive interface.
+          </p>
+          <ul className="grid grid-cols-1 sm:grid-cols-3 gap-10 text-green-100 font-semibold text-lg sm:text-xl">
+            <li className="bg-green-700 bg-opacity-30 rounded-xl py-6 px-6 shadow-inner transition hover:bg-opacity-50 cursor-default">
+              🔍 Search & Filter Fonts
+            </li>
+            <li className="bg-green-700 bg-opacity-30 rounded-xl py-6 px-6 shadow-inner transition hover:bg-opacity-50 cursor-default">
+              🎨 Customize Size, Color & Weight
+            </li>
+            <li className="bg-green-700 bg-opacity-30 rounded-xl py-6 px-6 shadow-inner transition hover:bg-opacity-50 cursor-default">
+              🌙 Dark Mode & Responsive Design
+            </li>
+          </ul>
+        </div>
+      </section>
+
 
       {/* Main */}
       <main className="max-w-7xl mx-auto px-4 py-10 space-y-6" id="fonts">

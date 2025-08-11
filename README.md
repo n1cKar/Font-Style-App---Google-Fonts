@@ -20,7 +20,7 @@ demo link: https://font-style-app.vercel.app
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/font-style-app.git
+   git clone https://github.com/n1cKar/Font-Style-App---Google-Fonts.git
    cd font-style-app
 
 2. Installing dependencies:
